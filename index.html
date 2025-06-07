@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crash Game Final</title>
   <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
       color: white;
@@ -15,295 +15,298 @@
       height: 100vh;
       overflow: hidden;
     }
-    #wallet {
+    /* Wallet */
+    #wallet-container {
       position: absolute;
+      top: 10px;
       left: 50%;
-      top: 15px;
       transform: translateX(-50%);
-      font-size: 1.1em;
       background: #ff0080;
-      color: #fff;
+      padding: 5px 15px;
       border-radius: 16px;
-      padding: 5px 20px 4px 20px;
       font-weight: bold;
+      font-size: 1.1em;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.5);
       z-index: 10;
-      letter-spacing: 1px;
-      min-width: 55px;
-      text-align: center;
-      box-shadow: 0 1px 8px #ff008052;
-      border: 2.5px solid #fff3;
     }
+    #wallet-container::before {
+      content: "$";
+      margin-right: 2px;
+    }
+
+    /* Game area */
     #game-container {
-      flex: 1;
+      flex: 0 0 65vh;
       position: relative;
-      background: radial-gradient(circle at 50% 70%, #23235b 50%, #181842 100%);
+      background: radial-gradient(circle at 50% 80%, #23235b 50%, #181842 100%);
       overflow: hidden;
-      min-height: 56vh;
     }
     #plane {
       position: absolute;
-      width: 130px; /* 10% أصغر من 145 */
+      width: 162px; /* 10% smaller */
       bottom: 0;
       left: 0;
-      display: block;
-      user-select: none;
-      pointer-events: none;
-      transition: filter 0.08s;
-      filter: drop-shadow(0 5px 22px #000b);
+      will-change: transform;
     }
     #multiplierFloat {
       position: absolute;
       color: #00ff99;
-      font-weight: bold;
       font-size: 1.6em;
-      user-select: none;
-      pointer-events: none;
-      text-shadow: 0 0 7px #000, 0 0 9px #00ff99;
+      font-weight: bold;
+      text-shadow: 0 0 6px #000, 0 0 8px #00ff99;
       white-space: nowrap;
+      pointer-events: none;
     }
+
+    /* Controls */
     #controls {
+      flex: 0 0 auto;
       background: #111;
-      padding: 14px 7px 30px 7px;
+      padding: 10px 5px 5px;
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 7px;
+      justify-content: center;
+      gap: 8px;
     }
     #countdown {
-      font-size: 1.08em;
-      margin-bottom: 5px;
+      width: 100%;
+      text-align: center;
       color: #ffaa00;
+      margin-bottom: 5px;
+      font-size: 1em;
     }
     #betAmount {
-      width: 82px;
-      padding: 7px;
+      width: 80px;
+      padding: 6px;
       font-size: 1em;
-      border-radius: 7px;
+      border-radius: 6px;
       border: none;
       text-align: center;
     }
     .bet-options {
       display: flex;
-      gap: 9px;
-      margin-bottom: 1px;
+      gap: 6px;
     }
     .bet-options button {
-      padding: 7px 14px;
-      font-size: .98em;
-      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: .9em;
       border: none;
-      background-color: #333;
-      color: white;
+      border-radius: 5px;
+      background: #333;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background .3s;
     }
     .bet-options button:hover {
       background: #ff0080;
-      color: #fff;
+      color: white;
     }
     #btn-group {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 14px;
+      margin-top: 4px;
+      margin-bottom: 5px;
     }
     #startBtn, #cashoutBtn {
-      padding: 11px 26px;
-      font-size: 1.02em;
-      border-radius: 9px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
       font-weight: bold;
-      margin: 0;
-      min-width: 110px;
-      letter-spacing: 1px;
+      min-width: 100px;
     }
     #startBtn {
       background: #ff0080;
       color: white;
     }
     #startBtn:disabled {
-      background-color: #b94c80;
+      background: #b94c80;
       cursor: not-allowed;
     }
     #cashoutBtn {
-      background-color: #333;
+      background: #333;
       color: white;
     }
     #cashoutBtn:disabled {
-      background-color: #555;
+      background: #555;
       cursor: not-allowed;
     }
-    @media (max-width: 600px) {
-      #game-container { min-height: 48vh;}
-      #wallet { font-size: 1em; min-width: 40px;}
-      #plane { width: 96px;}
-      #multiplierFloat { font-size: 1.17em;}
-      #betAmount { width: 70px; }
-      #startBtn, #cashoutBtn { padding: 10px 11px; min-width: 88px;}
-      #btn-group { gap: 7px; }
+
+    /* Fake players */
+    #players {
+      flex: 0 0 15vh;
+      background: #16162f;
+      overflow-y: auto;
+      padding: 5px 10px;
+      font-size: .9em;
+    }
+    #players .player {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      color: #ccc;
+    }
+    #players .player.win { color: #0f0; }
+    #players .player.lose { color: #f33; }
+
+    @media (max-width:600px) {
+      #plane { width: 120px; }
+      #multiplierFloat { font-size: 1.2em; }
+      #wallet-container { font-size: 1em; padding: 4px 12px; }
+      .bet-options button { padding:5px 10px; font-size:.8em; }
+      #startBtn,#cashoutBtn { padding:8px 16px; font-size:.9em; min-width:80px; }
     }
   </style>
 </head>
 <body>
-<div id="wallet">100</div>
-<div id="game-container">
-  <img id="plane" src="https://cdn-icons-png.flaticon.com/512/1995/1995799.png" alt="Plane" />
-  <div id="multiplierFloat">1.00x</div>
-</div>
-<div id="controls">
-  <div id="countdown"></div>
-  <input id="betAmount" type="number" min="1" value="10" />
-  <div class="bet-options">
-    <button data-value="5">5</button>
-    <button data-value="10">10</button>
-    <button data-value="20">20</button>
-    <button data-value="1000">1000</button>
+
+  <div id="wallet-container">100</div>
+
+  <div id="game-container">
+    <img id="plane" src="https://cdn-icons-png.flaticon.com/512/483/483361.png" alt="Plane">
+    <div id="multiplierFloat">1.00x</div>
   </div>
-  <div id="btn-group">
-    <button id="startBtn">وضع رهان</button>
-    <button id="cashoutBtn" disabled>سحب الأرباح</button>
+
+  <div id="controls">
+    <div id="countdown">Next round in 3s</div>
+    <input id="betAmount" type="number" min="1" value="10">
+    <div class="bet-options">
+      <button data-val="5">5</button>
+      <button data-val="10">10</button>
+      <button data-val="20">20</button>
+      <button data-val="1000">1000</button>
+    </div>
+    <div id="btn-group">
+      <button id="startBtn">وضع رهان</button>
+      <button id="cashoutBtn" disabled>سحب الأرباح</button>
+    </div>
   </div>
-</div>
-<audio id="flySound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_b208bd429.mp3"></audio>
-<audio id="explosionSound" src="https://cdn.pixabay.com/audio/2021/09/01/audio_28472dc45.mp3"></audio>
-<script>
-  const plane = document.getElementById('plane');
-  const multiplierFloat = document.getElementById('multiplierFloat');
-  const walletDisplay = document.getElementById('wallet');
-  const countdownDisplay = document.getElementById('countdown');
-  const betAmountInput = document.getElementById('betAmount');
-  const betButtons = document.querySelectorAll('.bet-options button');
-  const startBtn = document.getElementById('startBtn');
-  const cashoutBtn = document.getElementById('cashoutBtn');
-  const flySound = document.getElementById('flySound');
-  const explosionSound = document.getElementById('explosionSound');
-  let wallet = 100;
-  let multiplier = 1;
-  let crashed = false;
-  let playing = false;
-  let placedBet = false;
-  let cycleActive = false;
-  let positionX = 0;
-  let positionY = 0;
-  let gameInterval, countdownInterval;
-  let speedX = 3, speedY = 2;
-  // ازرار الرهان الجاهز
-  betButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      betAmountInput.value = button.getAttribute('data-value');
-    });
-  });
-  function updateWallet() {
-    walletDisplay.textContent = Math.floor(wallet);
-  }
-  function resetPlane() {
-    positionX = 0;
-    positionY = 0;
-    plane.style.left = '0px';
-    plane.style.bottom = '0px';
-    plane.style.display = 'block';
-    multiplierFloat.style.left = '50px';
-    multiplierFloat.style.bottom = '95px';
-    multiplierFloat.style.display = 'block';
-    multiplierFloat.textContent = "1.00x";
-  }
-  function resetGame() {
-    crashed = false;
-    playing = false;
-    placedBet = false;
-    multiplier = 1;
-    speedX = 3 + Math.random()*2;
-    speedY = 2 + Math.random();
-    resetPlane();
-    startBtn.disabled = false;
-    cashoutBtn.disabled = true;
-  }
-  function startCycle() {
-    if (cycleActive) return;
-    cycleActive = true;
-    resetGame();
-    let count = 3;
-    countdownDisplay.textContent = `الدورة التالية بعد ${count} ثواني`;
-    countdownInterval = setInterval(() => {
-      count--;
-      countdownDisplay.textContent = `الدورة التالية بعد ${count} ثواني`;
-      if (count <= 0) {
-        clearInterval(countdownInterval);
-        countdownDisplay.textContent = '';
-        startFly();
+
+  <div id="players">
+    <!-- Fake players go here -->
+  </div>
+
+  <audio id="flySound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_b208bd429.mp3"></audio>
+  <audio id="explosionSound" src="https://cdn.pixabay.com/audio/2021/09/01/audio_28472dc45.mp3"></audio>
+
+  <script>
+    const plane = document.getElementById('plane'),
+          multF = document.getElementById('multiplierFloat'),
+          walletEl = document.getElementById('wallet-container'),
+          countdownEl = document.getElementById('countdown'),
+          betInput = document.getElementById('betAmount'),
+          betBtns = document.querySelectorAll('.bet-options button'),
+          startBtn = document.getElementById('startBtn'),
+          cashoutBtn = document.getElementById('cashoutBtn'),
+          playersEl = document.getElementById('players'),
+          flySound = document.getElementById('flySound'),
+          explosionSound = document.getElementById('explosionSound');
+
+    let wallet = 100, bet=10, multiplier=1, crashed=false,
+        playing=false, placed=false, posX=0,posY=0,
+        cycleActive=false, cnt=3, ci, gi, pi;
+
+    // fake players data
+    const names = ['amir**','yass**','samir*','hkhl**','noura*'];
+    function randomPlayers(){
+      playersEl.innerHTML = '';
+      for(let i=0;i<5;i++){
+        let name = names[Math.floor(Math.random()*names.length)];
+        let mlt = (Math.random()*5).toFixed(2);
+        let stake = [5,10,20,1000][Math.floor(Math.random()*4)];
+        let win = Math.random()<0.5 ? 0 : (mlt*stake).toFixed(2);
+        const div = document.createElement('div');
+        div.className='player '+(win>0?'win':'lose');
+        div.innerHTML = `<span>${name}</span><span>${win>0?'+':''}${win} MAD</span>`;
+        playersEl.appendChild(div);
       }
-    }, 1000);
-  }
-  function startFly() {
-    flySound.play();
-    plane.style.display = 'block';
-    multiplierFloat.style.display = 'block';
-    gameInterval = setInterval(() => {
-      multiplier += 0.01;
-      positionX += speedX;
-      positionY += speedY;
-      plane.style.left = positionX + 'px';
-      plane.style.bottom = positionY + 'px';
-      multiplierFloat.textContent = multiplier.toFixed(2) + "x";
-      multiplierFloat.style.left = (positionX + 62) + "px";
-      multiplierFloat.style.bottom = (positionY + 88) + "px";
-      // نهاية الجولة: Crash عشوائي أو وصلت لنهاية الفضاء
-      if (Math.random() < 0.008 * multiplier || positionX > window.innerWidth - 160 || positionY > document.getElementById('game-container').offsetHeight - 100) {
-        crash();
+    }
+    // update wallet display
+    function updW(){ walletEl.textContent = Math.floor(wallet); }
+
+    // reset
+    function reset(){
+      clearInterval(gi); clearInterval(ci);
+      crashed=playing=placed=false; multiplier=1;
+      posX=posY=0;
+      plane.style.transform='translate(0,0)'; plane.style.display='block';
+      multF.style.transform='translate(10px,10px)'; multF.textContent='1.00x';
+      startBtn.disabled=false; cashoutBtn.disabled=true;
+      cnt=3; countdownEl.textContent='Next round in '+cnt+'s';
+      cycleActive=false;
+    }
+
+    function startCycle(){
+      if(cycleActive) return;
+      reset(); cycleActive=true;
+      ci = setInterval(()=>{
+        cnt--;
+        if(cnt>0){
+          countdownEl.textContent='Next round in '+cnt+'s';
+        } else {
+          clearInterval(ci);
+          countdownEl.textContent='🚀';
+          startFly();
+        }
+      },1000);
+    }
+
+    function startFly(){
+      playSound(flySound);
+      if(placed && wallet>=bet) wallet-=bet, updW();
+      playing=true; startBtn.disabled=true; cashoutBtn.disabled=false;
+      gi = setInterval(()=>{
+        multiplier+=0.01;
+        multF.textContent = multiplier.toFixed(2)+'x';
+        posX+=3; posY+=2;
+        plane.style.transform = `translate(${posX}px, -${posY}px)`;
+        multF.style.transform = `translate(${posX+10}px, ${-posY+10}px)`;
+        if(Math.random()<0.01*multiplier || posX>window.innerWidth-150){
+          crash();
+        }
+      },50);
+    }
+
+    function crash(){
+      crashed=true; playing=false; cycleActive=false;
+      clearInterval(gi);
+      playSound(explosionSound);
+      multF.textContent = '💥'+multiplier.toFixed(2)+'x';
+      plane.style.display='none';
+      if(placed){ placed=false; } // lose stake already deducted
+      startBtn.disabled=false; cashoutBtn.disabled=true;
+      setTimeout(startCycle,2000);
+    }
+
+    function place(){
+      if(!playing && !placed){
+        bet = parseInt(betInput.value)||1;
+        if(bet>wallet){ alert('رصيد غير كافي'); return; }
+        placed=true;
       }
-    }, 30);
-  }
-  function crash() {
-    crashed = true;
-    playing = false;
-    cycleActive = false;
-    clearInterval(gameInterval);
-    explosionSound.play();
-    plane.style.display = 'none';
-    multiplierFloat.textContent = '💥 ' + multiplier.toFixed(2) + 'x';
-    multiplierFloat.style.left = (positionX + 62) + "px";
-    multiplierFloat.style.bottom = (positionY + 88) + "px";
-    // إذا اللاعب راه داير رهان وما خرجش
-    if (placedBet) {
-      wallet -= parseInt(betAmountInput.value);
-      updateWallet();
-      placedBet = false;
     }
-    startBtn.disabled = false;
-    cashoutBtn.disabled = true;
-    setTimeout(startCycle, 2200);
-  }
-  // وضع رهان
-  startBtn.onclick = () => {
-    if (crashed || playing || placedBet) return;
-    let betValue = parseInt(betAmountInput.value) || 1;
-    if (wallet < betValue) {
-      alert('الرصيد غير كافي');
-      return;
+    function cashOut(){
+      if(playing && placed && !crashed){
+        placed=false; playing=false;
+        clearInterval(gi);
+        let win = bet*multiplier;
+        wallet+=win; updW();
+        multF.textContent = '✅'+win.toFixed(2)+'$';
+        cashoutBtn.disabled=true; startBtn.disabled=false;
+      }
     }
-    placedBet = true;
-    playing = true;
-    startBtn.disabled = true;
-    cashoutBtn.disabled = false;
-  };
-  // سحب الأرباح
-  cashoutBtn.onclick = () => {
-    if (!playing || crashed || !placedBet) return;
-    playing = false;
-    placedBet = false;
-    let win = (parseInt(betAmountInput.value) * multiplier);
-    wallet += win;
-    updateWallet();
-    multiplierFloat.textContent = '✅ ' + win.toFixed(2) + '$';
-    cashoutBtn.disabled = true;
-    startBtn.disabled = false;
-  };
-  window.onload = () => {
-    updateWallet();
-    resetGame();
+    function playSound(s){ s.currentTime=0; s.play(); }
+
+    // handlers
+    betBtns.forEach(b=>b.onclick=()=>betInput.value=b.dataset.val);
+    startBtn.onclick=place;
+    cashoutBtn.onclick=cashOut;
+
+    // init
+    updW(); randomPlayers();
+    pi = setInterval(randomPlayers,2000);
     startCycle();
-  };
-</script>
+  </script>
 </body>
 </html>
