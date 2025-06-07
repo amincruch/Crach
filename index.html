@@ -5,49 +5,101 @@
   <title>Crash Game</title>
   <style>
     body {
-      background: #0d1117;
+      margin: 0;
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
       color: white;
-      font-family: sans-serif;
-      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
     }
-    #multiplier {
-      color: #00ff99;
-      font-size: 2em;
-      margin-top: 20px;
-    }
-    #wallet {
-      margin-top: 10px;
-    }
-    #timer {
-      font-size: 1.2em;
-      color: #ffaa00;
-      margin-top: 10px;
-    }
-    .btn {
-      padding: 10px 25px;
-      font-size: 16px;
-      background: #ff0066;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      margin: 10px 5px;
+    #game-container {
+      position: relative;
+      height: 300px;
+      border-bottom: 2px dashed rgba(255,255,255,0.2);
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.03) 2px,
+        transparent 2px,
+        transparent 20px
+      );
+      text-align: center;
     }
     #plane {
       position: absolute;
-      top: 100px;
+      top: 140px;
       left: 0;
-      width: 60px;
+      width: 50px;
+      display: none;
+    }
+    h1#multiplier {
+      font-size: 2.2em;
+      margin: 10px 0;
+      color: #00ff99;
+      text-align: center;
+    }
+    h3#wallet {
+      font-size: 1.2em;
+      margin: 5px 0;
+      text-align: center;
+    }
+    #timer {
+      font-size: 1em;
+      color: #ffaa00;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin: 10px 5px;
+      background: #ff0066;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn:disabled {
+      background: gray;
+    }
+    #players, #chat {
+      position: absolute;
+      top: 310px;
+      bottom: 0;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.3);
+      font-size: 14px;
+      padding: 10px;
+    }
+    #players {
+      right: 0;
+      width: 200px;
+    }
+    #chat {
+      left: 0;
+      width: 200px;
+    }
+    .chat-message, .player-row {
+      margin-bottom: 8px;
+    }
+    .chat-name {
+      color: #00ffcc;
     }
   </style>
 </head>
 <body>
+  <div id="game-container">
+    <img id="plane" src="favicon.svg" alt="Plane">
+  </div>
   <h1 id="multiplier">1.00x</h1>
   <h3 id="wallet">Wallet: $100</h3>
   <div id="timer">⏳ Waiting to start...</div>
-  <button class="btn" id="startBtn">Start</button>
-  <button class="btn" id="cashoutBtn" disabled>Cash Out</button>
-  <img id="plane" src="https://i.ibb.co/dM0XNh4/plane.png" alt="Plane" style="display:none;">
+  <div style="text-align:center">
+    <button class="btn" id="startBtn">Start</button>
+    <button class="btn" id="cashoutBtn" disabled>Cash Out</button>
+  </div>
+
+  <div id="chat"></div>
+  <div id="players"></div>
 
   <audio id="flySound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b208b1d429.mp3?filename=jet-passby-6964.mp3"></audio>
   <audio id="crashSound" src="https://cdn.pixabay.com/download/audio/2021/09/01/audio_28d274cc45.mp3?filename=explosion-6088.mp3"></audio>
@@ -61,6 +113,7 @@
     let position = 0;
     let interval;
     let countdown;
+
     const plane = document.getElementById('plane');
     const multiplierDisplay = document.getElementById('multiplier');
     const walletDisplay = document.getElementById('wallet');
@@ -71,6 +124,23 @@
     const flySound = document.getElementById('flySound');
     const crashSound = document.getElementById('crashSound');
     const cashoutSound = document.getElementById('cashoutSound');
+
+    const playersDiv = document.getElementById('players');
+    const chatDiv = document.getElementById('chat');
+
+    const names = ["amine", "yassine", "simo", "khalid", "ayoub", "badr", "salma", "ihab", "lina", "kamal"];
+    const messages = [
+      "ربحت الحمد لله 💸",
+      "ضربني الشيب 😭",
+      "خرجت x2.5 🔥",
+      "فين الطيارة؟!",
+      "الكراش قريب 😬",
+      "خرجت في الوقت 👌",
+      "اللعبة واعرة بزاف",
+      "نزيد ولا نخرج؟ 🤔",
+      "خسرت ثاني 😭",
+      "كاين شي هدية؟"
+    ];
 
     function updateWalletDisplay() {
       walletDisplay.textContent = 'Wallet: $' + wallet.toFixed(2);
@@ -87,6 +157,7 @@
       timerDisplay.textContent = '💥 الطائرة تفركعات!';
       startBtn.disabled = false;
       cashoutBtn.disabled = true;
+      simulatePlayers();
     }
 
     function startGame() {
@@ -113,6 +184,7 @@
       multiplierDisplay.textContent = '1.00x';
       timerDisplay.textContent = '🚀 الطائرة طارت!';
       flySound.play();
+      playersDiv.innerHTML = '';
 
       interval = setInterval(() => {
         multiplier += 0.01;
@@ -138,12 +210,38 @@
         timerDisplay.textContent = '✅ سحبت وربحت!';
         startBtn.disabled = false;
         cashoutBtn.disabled = true;
+        simulatePlayers();
       }
     }
 
+    function simulatePlayers() {
+      playersDiv.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        let name = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 90);
+        let bet = Math.floor(Math.random() * 500) + 10;
+        let multi = (Math.random() * 4).toFixed(2);
+        let earned = (Math.random() > 0.4) ? (bet * multi).toFixed(0) : 0;
+        let div = document.createElement('div');
+        div.className = 'player-row';
+        div.innerHTML = `${name} | x${multi} | ${bet} MAD | ${earned} MAD`;
+        playersDiv.appendChild(div);
+      }
+    }
+
+    function simulateChat() {
+      let name = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 90);
+      let message = messages[Math.floor(Math.random() * messages.length)];
+      let div = document.createElement('div');
+      div.className = 'chat-message';
+      div.innerHTML = `<span class="chat-name">${name}:</span> ${message}`;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    setInterval(simulateChat, 3000);
+
     startBtn.onclick = startGame;
     cashoutBtn.onclick = cashOut;
-
     updateWalletDisplay();
   </script>
 </body>
