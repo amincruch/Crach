@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Crash Game</title>
+</head>
+<body style="background:#0d1117; color:white; text-align:center; font-family:sans-serif">
+  <h1 style="color:#00ff99" id="multiplier">1.00x</h1>
+  <h3 id="wallet">Wallet: $100</h3>
+  <button id="cashoutBtn" style="padding:10px 25px; font-size:20px; background:#ff0066; color:white; border:none; border-radius:10px;">Cash Out</button>
+
+  <script>
+    let multiplier = 1.00, crashed = false, wallet = 100, betAmount = 10;
+    let interval = setInterval(() => {
+      multiplier += 0.01;
+      document.getElementById('multiplier').textContent = multiplier.toFixed(2) + 'x';
+      if (Math.random() < 0.01 + multiplier / 100) crash();
+    }, 100);
+    function crash() {
+      clearInterval(interval);
+      crashed = true;
+      document.getElementById('multiplier').textContent = '💥 ' + multiplier.toFixed(2) + 'x';
+      document.getElementById('cashoutBtn').disabled = true;
+      wallet -= betAmount;
+      document.getElementById('wallet').textContent = 'Wallet: $' + wallet.toFixed(2);
+      alert('You lost $' + betAmount);
+    }
+    document.getElementById('cashoutBtn').onclick = () => {
+      if (!crashed) {
+        clearInterval(interval);
+        let win = betAmount * multiplier;
+        wallet += win;
+        document.getElementById('wallet').textContent = 'Wallet: $' + wallet.toFixed(2);
+        document.getElementById('cashoutBtn').disabled = true;
+        alert('You won $' + win.toFixed(2));
+      }
+    };
+  </script>
+</body>
+</html>
