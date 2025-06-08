@@ -34,7 +34,9 @@ let cnt = 3;
 let ci, gi, pi;
 let autoBetMode = false;
 let autoCashoutMode = false;
-let currentBetMode = 'manual';
+let currentBetMode = (
+  'manual'
+);
 let totalBets = 0;
 let totalWinnings = 0;
 
@@ -151,7 +153,8 @@ function startFly() {
         }
         
         // Auto cashout if enabled
-        if (currentBetMode === 'auto' && autoCashoutMode && \n            multiplier >= parseFloat(autoCashoutMultiplierInput.value)) {
+        if (currentBetMode === 'auto' && autoCashoutMode && \
+            multiplier >= parseFloat(autoCashoutMultiplierInput.value)) {
             cashOut();
         }
     }, 50);
@@ -182,7 +185,9 @@ function crash() {
 
 function place() {
     if (!playing && !placed) {
-        bet = currentBetMode === 'auto' ? \n            parseInt(autoBetAmountInput.value) || 1 : \n            parseInt(betInput.value) || 1;
+        bet = currentBetMode === 'auto' ? \
+            parseInt(autoBetAmountInput.value) || 1 : \
+            parseInt(betInput.value) || 1;
             
         if (bet > wallet) {
             alert("رصيد غير كافي");
