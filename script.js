@@ -1,21 +1,27 @@
 const plane = document.getElementById("plane"),
           multF = document.getElementById("multiplierFloat"),
-          walletEl = document.getElementById("wallet-container"),
           countdownEl = document.getElementById("countdown"),
           betInput = document.getElementById("betAmount"),
-          betBtns = document.querySelectorAll(".bet-options button"),
+          betOptionsGrid = document.querySelector(".bet-options-grid"),
           startBtn = document.getElementById("startBtn"),
           cashoutBtn = document.getElementById("cashoutBtn"),
           playersEl = document.getElementById("players"),
           flySound = document.getElementById("flySound"),
           explosionSound = document.getElementById("explosionSound"),
           autoBetAmountInput = document.getElementById("autoBetAmount"),
-          autoCashoutMultiplierInput = document.getElementById("autoCashoutMultiplier");
+          autoCashoutMultiplierInput = document.getElementById("autoCashoutMultiplier"),
+          betTypeSelectorBtns = document.querySelectorAll(".bet-type-btn"),
+          betSection = document.querySelector(".bet-section"),
+          autoBetCashoutOptions = document.querySelector(".auto-bet-cashout-options"),
+          totalBetsEl = document.getElementById("totalBets"),
+          totalStakesEl = document.getElementById("totalStakes"),
+          totalWinningsEl = document.getElementById("totalWinnings");
 
     let wallet = 100, bet=10, multiplier=1, crashed=false,
         playing=false, placed=false, posX=0,posY=0,
         cycleActive=false, cnt=3, ci, gi, pi,
-        autoBet = false, autoCashout = false;
+        autoBetMode = false, autoCashoutMode = false,
+        currentBetMode = 'manual';
 
     // fake players data
     const names = ["amir**","yass**","samir*","hkhl**","noura*"];
@@ -33,7 +39,11 @@ const plane = document.getElementById("plane"),
       }
     }
     // update wallet display
-    function updW(){ walletEl.textContent = Math.floor(wallet); }
+    function updW(){ 
+      // No direct wallet display in new design, stats are updated separately
+      totalStakesEl.textContent = wallet.toFixed(2) + " MAD";
+      totalWinningsEl.textContent = "0 MAD"; // This will be updated when a win occurs
+    }
 
     // reset
     function reset(){
@@ -41,7 +51,9 @@ const plane = document.getElementById("plane"),
       crashed=playing=placed=false; multiplier=1;
       posX=posY=0;
       plane.style.transform="translate(0,0)"; plane.style.display="block";
-      multF.style.transform="translate(10px,10px)"; multF.textContent="1.00x";
+      multF.style.left = `${plane.offsetWidth / 2}px`;
+      multF.style.bottom = `${plane.offsetHeight}px`;
+      multF.textContent="1.00x";
       startBtn.disabled=false; cashoutBtn.disabled=true;
       cnt=3; countdownEl.textContent="Next round in "+cnt+"s";
       cycleActive=false;
@@ -57,7 +69,7 @@ const plane = document.getElementById("plane"),
         } else {
           clearInterval(ci);
           countdownEl.textContent="🚀";
-          if (autoBet) {
+          if (currentBetMode === 'auto' && autoBetMode) {
             place();
           }
           startFly();
@@ -74,11 +86,12 @@ const plane = document.getElementById("plane"),
         multF.textContent = multiplier.toFixed(2)+"x";
         posX+=3; posY+=2;
         plane.style.transform = `translate(${posX}px, -${posY}px)`;
-        multF.style.transform = `translate(${posX+10}px, ${-posY+10}px)`;
+        multF.style.left = `${posX + plane.offsetWidth / 2}px`;
+        multF.style.bottom = `${posY + plane.offsetHeight}px`;
         if(Math.random()<0.01*multiplier || posX>window.innerWidth-150){
           crash();
         }
-        if (autoCashout && multiplier >= parseFloat(autoCashoutMultiplierInput.value)) {
+        if (currentBetMode === 'auto' && autoCashoutMode && multiplier >= parseFloat(autoCashoutMultiplierInput.value)) {
           cashOut();
         }
       },50);
@@ -129,11 +142,31 @@ const plane = document.getElementById("plane"),
     cashoutBtn.onclick=cashOut;
 
     // Auto Bet/Cashout handlers
-    document.getElementById("autoBetAmount").addEventListener("change", (e) => {
-      autoBet = e.target.value > 0;
+    betTypeSelectorBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        betTypeSelectorBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (btn.textContent.includes("AUTO")) {
+          currentBetMode = "auto";
+          autoBetCashoutOptions.style.display = "flex";
+          betOptionsGrid.style.display = "none";
+          betInput.style.display = "none";
+          document.querySelector(".bet-input-group label").style.display = "none";
+        } else {
+          currentBetMode = "manual";
+          autoBetCashoutOptions.style.display = "none";
+          betOptionsGrid.style.display = "grid";
+          betInput.style.display = "block";
+          document.querySelector(".bet-input-group label").style.display = "block";
+        }
+      });
     });
-    document.getElementById("autoCashoutMultiplier").addEventListener("change", (e) => {
-      autoCashout = e.target.value > 1;
+
+    autoBetAmountInput.addEventListener("change", (e) => {
+      autoBetMode = e.target.value > 0;
+    });
+    autoCashoutMultiplierInput.addEventListener("change", (e) => {
+      autoCashoutMode = e.target.value > 1;
     });
 
     // init
