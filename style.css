@@ -47,7 +47,7 @@ body {
   height: auto;
   bottom: 20%; /* Adjust as needed */
   left: 10%; /* Adjust as needed */
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50% );
   will-change: transform;
 }
 
