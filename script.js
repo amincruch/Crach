@@ -34,9 +34,7 @@ let cnt = 3;
 let ci, gi, pi;
 let autoBetMode = false;
 let autoCashoutMode = false;
-let currentBetMode = (
-  'manual'
-);
+let currentBetMode = 'manual';
 let totalBets = 0;
 let totalWinnings = 0;
 
@@ -52,7 +50,12 @@ function randomPlayers() {
         let win = Math.random() < 0.5 ? 0 : (mlt * stake).toFixed(2);
         const div = document.createElement("div");
         div.className = "player " + (win > 0 ? "win" : "lose");
-        div.innerHTML = `\n            <span>${name}</span>\n            <span>${mlt}x</span>\n            <span>${stake} MAD</span>\n            <span>${win > 0 ? "+" : ""}${win} MAD</span>\n        `;
+        div.innerHTML = `
+            <span>${name}</span>
+            <span>${mlt}x</span>
+            <span>${stake} MAD</span>
+            <span>${win > 0 ? "+" : ""}${win} MAD</span>
+        `;
         playersEl.appendChild(div);
     }
 }
@@ -153,7 +156,7 @@ function startFly() {
         }
         
         // Auto cashout if enabled
-        if (currentBetMode === 'auto' && autoCashoutMode && \
+        if (currentBetMode === 'auto' && autoCashoutMode && 
             multiplier >= parseFloat(autoCashoutMultiplierInput.value)) {
             cashOut();
         }
@@ -185,8 +188,8 @@ function crash() {
 
 function place() {
     if (!playing && !placed) {
-        bet = currentBetMode === 'auto' ? \
-            parseInt(autoBetAmountInput.value) || 1 : \
+        bet = currentBetMode === 'auto' ? 
+            parseInt(autoBetAmountInput.value) || 1 : 
             parseInt(betInput.value) || 1;
             
         if (bet > wallet) {
