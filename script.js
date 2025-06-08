@@ -85,9 +85,6 @@ const plane = document.getElementById("plane"),
         multiplier+=0.01;
         multF.textContent = multiplier.toFixed(2)+"x";
         posX+=3; posY+=2;
-        plane.style.transform = `translate(${posX}px, -${posY}px)`;
-        multF.style.left = `${posX + plane.offsetWidth / 2}px`;
-        multF.style.bottom = `${posY + plane.offsetHeight}px`;
         if(Math.random()<0.01*multiplier || posX>window.innerWidth-150){
           crash();
         }
@@ -173,3 +170,4 @@ const plane = document.getElementById("plane"),
     updW(); randomPlayers();
     pi = setInterval(randomPlayers,2000);
     startCycle();
+
