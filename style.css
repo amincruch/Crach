@@ -1,0 +1,180 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+/* Wallet */
+#wallet-container {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff0080;
+  padding: 5px 15px;
+  border-radius: 16px;
+  font-weight: bold;
+  font-size: 1.1em;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+#wallet-container::before {
+  content: "$";
+  margin-right: 2px;
+}
+
+/* Game area */
+#game-container {
+  flex: 0 0 65vh;
+  position: relative;
+  background: radial-gradient(circle at 50% 80%, #23235b 50%, #181842 100%);
+  overflow: hidden;
+}
+#plane {
+  position: absolute;
+  width: 162px; /* 10% smaller */
+  bottom: 0;
+  left: 0;
+  will-change: transform;
+}
+#multiplierFloat {
+  position: absolute;
+  color: #00ff99;
+  font-size: 1.6em;
+  font-weight: bold;
+  text-shadow: 0 0 6px #000, 0 0 8px #00ff99;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Controls */
+#controls {
+  flex: 0 0 auto;
+  background: #111;
+  padding: 10px 5px 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+#countdown {
+  width: 100%;
+  text-align: center;
+  color: #ffaa00;
+  margin-bottom: 5px;
+  font-size: 1em;
+}
+#betAmount {
+  width: 80px;
+  padding: 6px;
+  font-size: 1em;
+  border-radius: 6px;
+  border: none;
+  text-align: center;
+}
+.bet-options {
+  display: flex;
+  gap: 6px;
+}
+.bet-options button {
+  padding: 6px 12px;
+  font-size: .9em;
+  border: none;
+  border-radius: 5px;
+  background: #333;
+  cursor: pointer;
+  transition: background .3s;
+}
+.bet-options button:hover {
+  background: #ff0080;
+  color: white;
+}
+#btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  margin-bottom: 5px;
+}
+#startBtn, #cashoutBtn {
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  min-width: 100px;
+}
+#startBtn {
+  background: #ff0080;
+  color: white;
+}
+#startBtn:disabled {
+  background: #b94c80;
+  cursor: not-allowed;
+}
+#cashoutBtn {
+  background: #333;
+  color: white;
+}
+#cashoutBtn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+/* Fake players */
+#players {
+  flex: 0 0 15vh;
+  background: #16162f;
+  overflow-y: auto;
+  padding: 5px 10px;
+  font-size: .9em;
+}
+#players .player {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: #ccc;
+}
+#players .player.win { color: #0f0; }
+#players .player.lose { color: #f33; }
+
+@media (max-width:600px) {
+  #plane { width: 120px; }
+  #multiplierFloat { font-size: 1.2em; }
+  #wallet-container { font-size: 1em; padding: 4px 12px; }
+  .bet-options button { padding:5px 10px; font-size:.8em; }
+  #startBtn,#cashoutBtn { padding:8px 16px; font-size:.9em; min-width:80px; }
+}
+
+
+
+.auto-options {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.auto-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+}
+
+.auto-options input[type="number"] {
+  width: 70px;
+  padding: 5px;
+  font-size: 0.9em;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background: #222;
+  color: white;
+  text-align: center;
+}
