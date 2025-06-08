@@ -1,5 +1,5 @@
 // Get DOM elements
-const plane = document.getElementById("plane");
+const plane = document.getElementById("plane" );
 const multF = document.getElementById("multiplierFloat");
 const countdownEl = document.getElementById("countdown");
 const betInput = document.getElementById("betAmount");
