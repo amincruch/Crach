@@ -8,12 +8,12 @@
 </head>
 <body>
 
-  <div class="top-bar">
-    <button class="top-btn">Règles</button>
-    <button class="top-btn active">Historique</button>
+  <div class="top-nav">
+    <button class="nav-btn">Règles</button>
+    <button class="nav-btn active">HISTORIQUE</button>
   </div>
 
-  <div id="game-container">
+  <div id="game-area">
     <img id="plane" src="plane-yellow.png" alt="Plane">
     <div id="multiplierFloat">1.00x</div>
     <div id="countdown">Next round in 3s</div>
@@ -21,13 +21,13 @@
 
   <div class="bet-section">
     <div class="bet-type-selector">
-      <button class="bet-type-btn active">MANUEL</button>
+      <button class="bet-type-btn active">SÉLECTEUR DE MISE</button>
       <button class="bet-type-btn">PARI AUTO</button>
     </div>
 
     <div class="bet-input-group">
       <label for="betAmount">Pari</label>
-      <input id="betAmount" type="number" min="1" value="10">
+      <input id="betAmount" type="number" min="1" value="3">
     </div>
 
     <div class="bet-options-grid">
@@ -37,23 +37,23 @@
       <button data-val="100">100</button>
       <button data-val="300">300</button>
       <button data-val="1000">1000</button>
-      <button data-val="clear" class="clear-btn">X</button>
+      <button class="clear-bet">X</button>
     </div>
 
-    <div class="auto-bet-cashout-options">
-      <div class="auto-option">
-        <label for="autoBetAmount">Pari Auto</label>
+    <div class="auto-bet-cashout-options" style="display: none;">
+      <div class="auto-option-group">
+        <label for="autoBetAmount">Auto Bet</label>
         <input type="number" id="autoBetAmount" min="1" value="10">
       </div>
-      <div class="auto-option">
-        <label for="autoCashoutMultiplier">Cashout Auto</label>
+      <div class="auto-option-group">
+        <label for="autoCashoutMultiplier">Auto Cashout</label>
         <input type="number" id="autoCashoutMultiplier" min="1.01" step="0.01" value="2.00">
       </div>
     </div>
 
     <div class="action-buttons">
-      <button id="startBtn" class="place-bet-btn">PLACER UN PARI</button>
-      <button id="cashoutBtn" class="cashout-btn" disabled>RÉCUPÉRER LES GAINS</button>
+      <button id="startBtn">PLACER UN PARI</button>
+      <button id="cashoutBtn" disabled>RÉCUPÉRER LES GAINS</button>
     </div>
   </div>
 
@@ -72,13 +72,21 @@
     </div>
   </div>
 
-  <div id="players">
-    <!-- Fake players go here -->
+  <div id="players-list">
+    <div class="player-header">
+      <span>NOM D'UTILISA...</span>
+      <span>COTE</span>
+      <span>PARI</span>
+      <span>GAIN</span>
+    </div>
+    <div id="players">
+      <!-- Fake players go here -->
+    </div>
   </div>
 
-  <div class="auth-buttons">
-    <button class="auth-btn register-btn">INSCRIPTION</button>
-    <button class="auth-btn login-btn">SE CONNECTER</button>
+  <div class="bottom-nav">
+    <button class="bottom-btn">INSCRIPTION</button>
+    <button class="bottom-btn">SE CONNECTER</button>
   </div>
 
   <audio id="flySound" src="flySound.mp3" preload="auto"></audio>
@@ -87,3 +95,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
