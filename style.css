@@ -28,7 +28,7 @@ body {
 }
 
 .nav-btn.active {
-  background-color: #ff8c00;
+  background-color: #dc2626;
 }
 
 #game-area {
@@ -59,7 +59,9 @@ body {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   white-space: nowrap;
   pointer-events: none;
-  transform: translate(-50%, -50%); /* Center on plane */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #countdown {
@@ -69,7 +71,7 @@ body {
   transform: translate(-50%, -50%);
   font-size: 4em;
   font-weight: bold;
-  color: #ff8c00; /* Orange color for countdown */
+  color: #dc2626; /* Red color for countdown */
 }
 
 .bet-section {
@@ -97,7 +99,7 @@ body {
 }
 
 .bet-type-btn.active {
-  background-color: #ff8c00;
+  background-color: #dc2626;
 }
 
 .bet-input-group {
@@ -183,12 +185,12 @@ body {
 }
 
 #startBtn {
-  background-color: #ff8c00;
+  background-color: #dc2626;
   color: #fff;
 }
 
 #startBtn:disabled {
-  background-color: #cc6600;
+  background-color: #991b1b;
   cursor: not-allowed;
 }
 
@@ -265,7 +267,7 @@ body {
 }
 
 .bottom-btn {
-  background-color: #ff8c00;
+  background-color: #dc2626;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -300,5 +302,3 @@ body {
     gap: 10px;
   }
 }
-
-
