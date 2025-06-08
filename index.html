@@ -3,39 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crash Game Final</title>
+  <title>Crash Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div id="wallet-container">100</div>
+  <div class="top-bar">
+    <button class="top-btn">Règles</button>
+    <button class="top-btn active">Historique</button>
+  </div>
 
   <div id="game-container">
     <img id="plane" src="plane-yellow.png" alt="Plane">
     <div id="multiplierFloat">1.00x</div>
+    <div id="countdown">Next round in 3s</div>
   </div>
 
-  <div id="controls">
-    <div id="countdown">Next round in 3s</div>
-    <input id="betAmount" type="number" min="1" value="10">
-    <div class="bet-options">
-      <button data-val="5">5</button>
+  <div class="bet-section">
+    <div class="bet-type-selector">
+      <button class="bet-type-btn active">MANUEL</button>
+      <button class="bet-type-btn">PARI AUTO</button>
+    </div>
+
+    <div class="bet-input-group">
+      <label for="betAmount">Pari</label>
+      <input id="betAmount" type="number" min="1" value="10">
+    </div>
+
+    <div class="bet-options-grid">
+      <button data-val="3">3</button>
       <button data-val="10">10</button>
-      <button data-val="20">20</button>
+      <button data-val="40">40</button>
+      <button data-val="100">100</button>
+      <button data-val="300">300</button>
       <button data-val="1000">1000</button>
+      <button data-val="clear" class="clear-btn">X</button>
     </div>
-    <div class="auto-options">
-      <label>Auto Bet: <input type="number" id="autoBetAmount" min="1" value="10"></label>
-      <label>Auto Cashout: <input type="number" id="autoCashoutMultiplier" min="1.01" step="0.01" value="2.00"></label>
+
+    <div class="auto-bet-cashout-options">
+      <div class="auto-option">
+        <label for="autoBetAmount">Pari Auto</label>
+        <input type="number" id="autoBetAmount" min="1" value="10">
+      </div>
+      <div class="auto-option">
+        <label for="autoCashoutMultiplier">Cashout Auto</label>
+        <input type="number" id="autoCashoutMultiplier" min="1.01" step="0.01" value="2.00">
+      </div>
     </div>
-    <div id="btn-group">
-      <button id="startBtn">وضع رهان</button>
-      <button id="cashoutBtn" disabled>سحب الأرباح</button>
+
+    <div class="action-buttons">
+      <button id="startBtn" class="place-bet-btn">PLACER UN PARI</button>
+      <button id="cashoutBtn" class="cashout-btn" disabled>RÉCUPÉRER LES GAINS</button>
+    </div>
+  </div>
+
+  <div class="stats-section">
+    <div class="stat-item">
+      <span>Nombre de paris</span>
+      <span id="totalBets">153</span>
+    </div>
+    <div class="stat-item">
+      <span>Total des paris</span>
+      <span id="totalStakes">1609.08 MAD</span>
+    </div>
+    <div class="stat-item">
+      <span>Gains totaux</span>
+      <span id="totalWinnings">0 MAD</span>
     </div>
   </div>
 
   <div id="players">
     <!-- Fake players go here -->
+  </div>
+
+  <div class="auth-buttons">
+    <button class="auth-btn register-btn">INSCRIPTION</button>
+    <button class="auth-btn login-btn">SE CONNECTER</button>
   </div>
 
   <audio id="flySound" src="flySound.mp3" preload="auto"></audio>
