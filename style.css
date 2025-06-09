@@ -28,7 +28,7 @@ body {
 }
 
 .nav-btn.active {
-  background-color: #ff8c00; /* Orange color */
+  background-color: #ff8c00; /* Orange */
 }
 
 #game-area {
@@ -46,8 +46,10 @@ body {
   position: absolute;
   width: 90px; /* Reduced by 25% from 120px */
   height: auto;
-  /* Removed bottom, left, transform from here. JS will handle positioning. */
-  will-change: transform; /* Keep this for performance */
+  bottom: 20%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
 }
 
 #multiplierFloat {
@@ -63,34 +65,14 @@ body {
   transform: translate(-50%, -50%);
 }
 
-#countdown-container {
+#countdown {
   position: absolute;
-  bottom: 20px; /* Position at bottom */
-  right: 20px; /* Position at right */
-  width: 80px; /* Size of the circle */
-  height: 80px; /* Size of the circle */
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-#countdown-circle {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: conic-gradient(#ff8c00 0%, transparent 0%); /* Orange fill */
-}
-
-#countdown-number {
-  position: relative;
-  font-size: 2em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.625em; /* Reduced by 25% from 3.5em */
   font-weight: bold;
-  color: #fff;
-  z-index: 1; /* Ensure number is above the circle fill */
+  color: #ff8c00; /* Orange */
 }
 
 .bet-section {
@@ -118,7 +100,7 @@ body {
 }
 
 .bet-type-btn.active {
-  background-color: #ff8c00; /* Orange color */
+  background-color: #ff8c00; /* Orange */
 }
 
 .bet-input-group {
@@ -159,7 +141,7 @@ body {
 }
 
 .bet-options-grid button.clear-bet {
-  background-color: #ff8c00; /* Orange color */
+  background-color: #ff8c00; /* Orange */
 }
 
 .auto-bet-cashout-options {
@@ -204,7 +186,7 @@ body {
 }
 
 #startBtn {
-  background-color: #ff8c00; /* Orange color */
+  background-color: #ff8c00; /* Orange */
   color: #fff;
 }
 
@@ -286,7 +268,7 @@ body {
 }
 
 .bottom-btn {
-  background-color: #ff8c00; /* Orange color */
+  background-color: #ff8c00; /* Orange */
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -302,17 +284,13 @@ body {
 /* Responsive adjustments */
 @media (max-width: 600px) {
   #plane {
-    width: 100px;
+    width: 75px; /* Further reduced for smaller screens */
   }
   #multiplierFloat {
-    font-size: 2.5em;
-  }
-  #countdown-container {
-    width: 60px;
-    height: 60px;
-  }
-  #countdown-number {
     font-size: 1.5em;
+  }
+  #countdown {
+    font-size: 2em;
   }
   .bet-options-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -325,5 +303,4 @@ body {
     gap: 10px;
   }
 }
-
 
