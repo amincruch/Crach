@@ -1,8 +1,7 @@
 // Get DOM elements
 const plane = document.getElementById("plane");
-const countdownContainer = document.getElementById("countdown-container");
-const countdownCircle = document.getElementById("countdown-circle");
-const countdownNumber = document.getElementById("countdown-number");
+const multF = document.getElementById("multiplierFloat");
+const countdownEl = document.getElementById("countdown");
 const betInput = document.getElementById("betAmount");
 const betOptionsGrid = document.querySelector(".bet-options-grid");
 const startBtn = document.getElementById("startBtn");
@@ -18,12 +17,12 @@ const autoBetCashoutOptions = document.querySelector(".auto-bet-cashout-options"
 const totalBetsEl = document.getElementById("totalBets");
 const totalStakesEl = document.getElementById("totalStakes");
 const totalWinningsEl = document.getElementById("totalWinnings");
-const walletBalanceEl = document.getElementById("walletBalance");
 const betBtns = document.querySelectorAll(".bet-options-grid button[data-val]");
 const clearBtn = document.querySelector(".clear-bet");
+const currentWalletEl = document.getElementById("current-wallet");
 
 // Game variables
-let wallet = 5000;
+let wallet = 1000;
 let bet = 3;
 let multiplier = 1;
 let crashed = false;
@@ -32,7 +31,7 @@ let placed = false;
 let posX = 0;
 let posY = 0;
 let cycleActive = false;
-let cnt = 1;
+let cnt = 5; 
 let ci, gi, pi;
 let autoBetMode = false;
 let autoCashoutMode = false;
@@ -52,22 +51,17 @@ function randomPlayers() {
         let win = Math.random() < 0.5 ? 0 : (mlt * stake).toFixed(2);
         const div = document.createElement("div");
         div.className = "player " + (win > 0 ? "win" : "lose");
-        div.innerHTML = `
-            <span>${name}</span>
-            <span>${mlt}x</span>
-            <span>${stake} MAD</span>
-            <span>${win > 0 ? "+" : ""}${win} MAD</span>
-        `;
+        div.innerHTML = `\n            <span>${name}</span>\n            <span>${mlt}x</span>\n            <span>${stake} MAD</span>\n            <span>${win > 0 ? "+" : ""}${win} MAD</span>\n        `;
         playersEl.appendChild(div);
     }
 }
 
 // Update wallet and stats display
 function updateStats() {
-    walletBalanceEl.textContent = wallet.toFixed(2) + " MAD";
-    totalStakesEl.textContent = totalStakesEl.textContent; // Keep original total stakes
+    totalStakesEl.textContent = wallet.toFixed(2) + " MAD";
     totalWinningsEl.textContent = totalWinnings.toFixed(2) + " MAD";
     totalBetsEl.textContent = totalBets.toString();
+    currentWalletEl.textContent = wallet.toFixed(2) + " MAD";
 }
 
 // Reset game state
@@ -80,19 +74,22 @@ function reset() {
     posY = 0;
     
     // Reset plane position
-    plane.style.transform = "translate(0px, 0px)"; // Set initial position to 0,0
+    plane.style.transform = "translate(0, 0)";
     plane.style.display = "block";
     
     // Reset multiplier display
-    countdownNumber.textContent = "1.00x"; // Display multiplier in countdown element
-    countdownContainer.style.display = 'none'; // Hide countdown container initially
+    multF.textContent = "1.00x";
+    multF.style.left = "50%";
+    multF.style.top = "50%";
+    multF.style.transform = "translate(-50%, -50%)";
     
     // Reset buttons
     startBtn.disabled = false;
     cashoutBtn.disabled = true;
     
     // Reset countdown
-    cnt = 1;
+    cnt = 5; 
+    countdownEl.textContent = ""; 
     cycleActive = false;
 }
 
@@ -101,26 +98,25 @@ function startCycle() {
     reset();
     cycleActive = true;
     
-    countdownContainer.style.display = 'flex'; // Show countdown container for countdown
-    countdownNumber.textContent = cnt;
-    countdownCircle.style.background = 'conic-gradient(#ff8c00 0%, transparent 0%)'; // Reset circle fill
-
     ci = setInterval(() => {
-        countdownNumber.textContent = cnt;
-        const percentage = (cnt / 5) * 100; // Calculate fill percentage
-        countdownCircle.style.background = `conic-gradient(#ff8c00 ${percentage}%, transparent ${percentage}%)`;
-
-        if (cnt < 5) {
-            cnt++;
-        } else {
+        countdownEl.textContent = cnt; 
+        cnt--;
+        if (cnt < 0) {
             clearInterval(ci);
-            // countdownContainer.style.display = 'none'; // No need to hide, will show multiplier
+            countdownEl.textContent = "🚀";
+            
+            // Auto bet if enabled
+            if (currentBetMode === 'auto' && autoBetMode) {
+                place();
+            }
+            
             setTimeout(startFly, 500);
         }
     }, 1000);
 }
 
 function startFly() {
+    console.log("startFly called"); // Added console log
     playSound(flySound);
     
     // Deduct bet if placed
@@ -136,26 +132,26 @@ function startFly() {
     
     gi = setInterval(() => {
         multiplier += 0.01;
-        countdownNumber.textContent = multiplier.toFixed(2) + "x"; // Display multiplier
-        countdownCircle.style.background = 'conic-gradient(#ff8c00 100%, transparent 0%)'; // Keep circle full during flight
-
+        multF.textContent = multiplier.toFixed(2) + "x";
+        
         // Move plane
         posX += 3;
         posY += 2;
         
-        // Get game area dimensions to prevent plane from going off-screen
-        const gameAreaRect = document.getElementById("game-area").getBoundingClientRect();
-        const planeWidth = plane.offsetWidth;
-        const planeHeight = plane.offsetHeight;
-
-        // Calculate new position, ensuring it stays within bounds
-        let newPlaneX = Math.min(posX, gameAreaRect.width - planeWidth); // Adjust for plane's full width
-        let newPlaneY = Math.min(posY, gameAreaRect.height - planeHeight); // Adjust for plane's full height
-
-        plane.style.transform = `translate(${newPlaneX}px, -${newPlaneY}px)`;
+        plane.style.transform = `translate(${posX}px, -${posY}px)`;
         
+        // Move multiplier with plane - simplified positioning
+        const planeRect = plane.getBoundingClientRect();
+        const gameAreaRect = document.getElementById("game-area").getBoundingClientRect();
+
+        multF.style.left = (planeRect.left - gameAreaRect.left + planeRect.width / 2) + "px";
+        multF.style.top = (planeRect.top - gameAreaRect.top - 20) + "px";
+        multF.style.transform = "translate(-50%, -100%)";
+
+        console.log(`Plane posX: ${posX}, posY: ${posY}`); // Log posX and posY
+
         // Check for crash
-        if (Math.random() < 0.01 * multiplier || newPlaneX >= gameAreaRect.width - planeWidth) { // Crash if reaches edge
+        if (Math.random() < 0.01 * multiplier || posX > window.innerWidth - 150) {
             crash();
         }
         
@@ -174,7 +170,7 @@ function crash() {
     clearInterval(gi);
     
     playSound(explosionSound);
-    countdownNumber.textContent = "💥 " + multiplier.toFixed(2) + "x"; // Display crash message
+    multF.textContent = "💥 " + multiplier.toFixed(2) + "x";
     plane.style.display = "none";
     
     if (placed) {
@@ -216,7 +212,8 @@ function cashOut() {
         totalWinnings += win;
         updateStats();
         
-        countdownNumber.textContent = "✅ " + multiplier.toFixed(2) + "x"; // Display cashout message
+        multF.textContent = "✅ " + multiplier.toFixed(2) + "x";
+        
         startBtn.textContent = "PLACER UN PARI";
         startBtn.disabled = false;
         cashoutBtn.disabled = true;
@@ -229,7 +226,14 @@ function cashOut() {
 }
 
 // Event Listeners
-startBtn.addEventListener("click", place);
+startBtn.addEventListener("click", () => {
+    if (!playing && !placed) {
+        place();
+    } else if (playing && placed) {
+        cashOut();
+    }
+});
+
 cashoutBtn.addEventListener("click", cashOut);
 
 betOptionsGrid.addEventListener("click", (e) => {
@@ -239,26 +243,36 @@ betOptionsGrid.addEventListener("click", (e) => {
 });
 
 clearBtn.addEventListener("click", () => {
-    betInput.value = "";
+    betInput.value = 0;
 });
 
 betTypeSelectorBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        betTypeSelectorBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        if (btn.textContent.includes('AUTO')) {
-            currentBetMode = 'auto';
-            autoBetCashoutOptions.style.display = 'flex';
+    btn.addEventListener("click", () => {
+        betTypeSelectorBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (btn.textContent.includes("AUTO")) {
+            currentBetMode = "auto";
+            autoBetCashoutOptions.style.display = "flex";
+            betOptionsGrid.style.display = "none";
+            betInput.closest(".bet-input-group").style.display = "none";
             autoBetMode = true;
             autoCashoutMode = true;
         } else {
-            currentBetMode = 'manual';
-            autoBetCashoutOptions.style.display = 'none';
+            currentBetMode = "manual";
+            autoBetCashoutOptions.style.display = "none";
+            betOptionsGrid.style.display = "grid";
+            betInput.closest(".bet-input-group").style.display = "block";
             autoBetMode = false;
             autoCashoutMode = false;
         }
     });
 });
+
+// Audio functions
+function playSound(sound) {
+    sound.currentTime = 0;
+    sound.play();
+}
 
 // Initial setup
 randomPlayers();
