@@ -4,9 +4,9 @@ body {
   color: #fff;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Changed from height to min-height */
+  min-height: 100vh;
   margin: 0;
-  overflow-x: hidden; /* Changed from overflow to overflow-x */
+  overflow-x: hidden;
 }
 
 .top-nav {
@@ -28,7 +28,7 @@ body {
 }
 
 .nav-btn.active {
-  background-color: #dc2626;
+  background-color: #ff8c00; /* Orange color */
 }
 
 #game-area {
@@ -39,12 +39,12 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  min-height: 200px; /* Added min-height */
+  min-height: 200px;
 }
 
 #plane {
   position: absolute;
-  width: 120px; /* Reduced from 150px */
+  width: 90px; /* Reduced by 25% from 120px */
   height: auto;
   bottom: 20%;
   left: 10%;
@@ -55,7 +55,7 @@ body {
 #multiplierFloat {
   position: absolute;
   color: #fff;
-  font-size: 2.5em; /* Reduced from 3em */
+  font-size: 1.875em; /* Reduced by 25% from 2.5em */
   font-weight: bold;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   white-space: nowrap;
@@ -70,9 +70,9 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 3.5em; /* Reduced from 4em */
+  font-size: 3.5em;
   font-weight: bold;
-  color: #dc2626; /* Red color for countdown */
+  color: #ff8c00; /* Orange color for countdown */
 }
 
 .bet-section {
@@ -100,7 +100,7 @@ body {
 }
 
 .bet-type-btn.active {
-  background-color: #dc2626;
+  background-color: #ff8c00; /* Orange color */
 }
 
 .bet-input-group {
@@ -141,7 +141,7 @@ body {
 }
 
 .bet-options-grid button.clear-bet {
-  background-color: #ff0000;
+  background-color: #ff8c00; /* Orange color */
 }
 
 .auto-bet-cashout-options {
@@ -186,12 +186,12 @@ body {
 }
 
 #startBtn {
-  background-color: #dc2626;
+  background-color: #ff8c00; /* Orange color */
   color: #fff;
 }
 
 #startBtn:disabled {
-  background-color: #991b1b;
+  background-color: #cc7000;
   cursor: not-allowed;
 }
 
@@ -268,7 +268,7 @@ body {
 }
 
 .bottom-btn {
-  background-color: #dc2626;
+  background-color: #ff8c00; /* Orange color */
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -296,7 +296,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
   }
   .bet-options-grid button:last-child {
-    grid-column: span 3; /* Make X button span across */
+    grid-column: span 3;
   }
   .auto-bet-cashout-options {
     flex-direction: column;
