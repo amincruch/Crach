@@ -46,10 +46,8 @@ body {
   position: absolute;
   width: 90px; /* Reduced by 25% from 120px */
   height: auto;
-  bottom: 20%;
-  left: 10%;
-  transform: translate(-50%, -50%);
-  will-change: transform;
+  /* Removed bottom, left, transform from here. JS will handle positioning. */
+  will-change: transform; /* Keep this for performance */
 }
 
 #multiplierFloat {
@@ -327,4 +325,5 @@ body {
     gap: 10px;
   }
 }
+
 
