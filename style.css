@@ -65,14 +65,34 @@ body {
   transform: translate(-50%, -50%);
 }
 
-#countdown {
+#countdown-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3.5em;
+  bottom: 20px; /* Position at bottom */
+  right: 20px; /* Position at right */
+  width: 80px; /* Size of the circle */
+  height: 80px; /* Size of the circle */
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#countdown-circle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(#ff8c00 0%, transparent 0%); /* Orange fill */
+}
+
+#countdown-number {
+  position: relative;
+  font-size: 2em;
   font-weight: bold;
-  color: #ff8c00; /* Orange color for countdown */
+  color: #fff;
+  z-index: 1; /* Ensure number is above the circle fill */
 }
 
 .bet-section {
@@ -289,8 +309,12 @@ body {
   #multiplierFloat {
     font-size: 2.5em;
   }
-  #countdown {
-    font-size: 3em;
+  #countdown-container {
+    width: 60px;
+    height: 60px;
+  }
+  #countdown-number {
+    font-size: 1.5em;
   }
   .bet-options-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -303,3 +327,4 @@ body {
     gap: 10px;
   }
 }
+
