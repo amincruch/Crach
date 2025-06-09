@@ -1,5 +1,5 @@
 // Get DOM elements
-const plane = document.getElementById("plane" );
+const plane = document.getElementById("plane");
 const multF = document.getElementById("multiplierFloat");
 const countdownEl = document.getElementById("countdown");
 const betInput = document.getElementById("betAmount");
@@ -21,7 +21,7 @@ const betBtns = document.querySelectorAll(".bet-options-grid button[data-val]");
 const clearBtn = document.querySelector(".clear-bet");
 
 // Game variables
-let wallet = 1000;
+let wallet = 5000; // Increased wallet amount
 let bet = 3;
 let multiplier = 1;
 let crashed = false;
@@ -30,7 +30,7 @@ let placed = false;
 let posX = 0;
 let posY = 0;
 let cycleActive = false;
-let cnt = 3;
+let cnt = 1; // Changed countdown start to 1
 let ci, gi, pi;
 let autoBetMode = false;
 let autoCashoutMode = false;
@@ -91,8 +91,8 @@ function reset() {
     cashoutBtn.disabled = true;
     
     // Reset countdown
-    cnt = 3;
-    countdownEl.textContent = "Next round in " + cnt + "s";
+    cnt = 1; // Reset countdown to 1
+    countdownEl.textContent = cnt; // Display only the number
     cycleActive = false;
 }
 
@@ -102,9 +102,9 @@ function startCycle() {
     cycleActive = true;
     
     ci = setInterval(() => {
-        cnt--;
-        if (cnt > 0) {
-            countdownEl.textContent = "Next round in " + cnt + "s";
+        countdownEl.textContent = cnt; 
+        if (cnt < 5) { // Countdown from 1 to 5
+            cnt++;
         } else {
             clearInterval(ci);
             countdownEl.textContent = "🚀";
@@ -137,21 +137,30 @@ function startFly() {
         multiplier += 0.01;
         multF.textContent = multiplier.toFixed(2) + "x";
         
-        // Move plane
+        // Move plane and keep it within screen bounds
         posX += 3;
         posY += 2;
-        plane.style.transform = `translate(${posX}px, -${posY}px)`;
         
-        // Move multiplier with plane
-        const planeRect = plane.getBoundingClientRect();
+        // Get game area dimensions to prevent plane from going off-screen
         const gameAreaRect = document.getElementById("game-area").getBoundingClientRect();
+        const planeWidth = plane.offsetWidth;
+        const planeHeight = plane.offsetHeight;
+
+        // Calculate new position, ensuring it stays within bounds
+        let newPlaneX = Math.min(posX, gameAreaRect.width - planeWidth / 2); // Adjust for plane's center
+        let newPlaneY = Math.min(posY, gameAreaRect.height - planeHeight / 2); // Adjust for plane's center
+
+        plane.style.transform = `translate(${newPlaneX}px, -${newPlaneY}px)`;
+        
+        // Attach multiplier to plane
+        const planeRect = plane.getBoundingClientRect();
         
         multF.style.left = (planeRect.left - gameAreaRect.left + planeRect.width / 2) + "px";
         multF.style.top = (planeRect.top - gameAreaRect.top - 20) + "px";
         multF.style.transform = "translate(-50%, -100%)";
         
         // Check for crash
-        if (Math.random() < 0.01 * multiplier || posX > window.innerWidth - 150) {
+        if (Math.random() < 0.01 * multiplier || newPlaneX >= gameAreaRect.width - planeWidth / 2) { // Crash if reaches edge
             crash();
         }
         
@@ -209,69 +218,54 @@ function cashOut() {
         
         let win = bet * multiplier;
         wallet += win;
-        totalWinnings += win - bet; // Net winnings
+        totalWinnings += win;
         updateStats();
         
-        multF.textContent = "✅ " + win.toFixed(2) + " MAD";
-        cashoutBtn.disabled = true;
-        startBtn.disabled = false;
+        multF.textContent = "✅ " + multiplier.toFixed(2) + "x";
         startBtn.textContent = "PLACER UN PARI";
+        startBtn.disabled = false;
+        cashoutBtn.disabled = true;
+        
+        setTimeout(() => {
+            randomPlayers();
+            startCycle();
+        }, 2000);
     }
 }
 
-function playSound(sound) {
-    if (sound) {
-        sound.currentTime = 0;
-        sound.play().catch(e => console.log("Sound play failed:", e));
-    }
-}
+// Event Listeners
+startBtn.addEventListener("click", place);
+cashoutBtn.addEventListener("click", cashOut);
 
-// Event handlers
-betBtns.forEach(btn => {
-    btn.onclick = () => {
-        betInput.value = btn.dataset.val;
-    };
+betOptionsGrid.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON" && e.target.dataset.val) {
+        betInput.value = e.target.dataset.val;
+    }
 });
 
-clearBtn.onclick = () => {
+clearBtn.addEventListener("click", () => {
     betInput.value = "";
-};
+});
 
-startBtn.onclick = place;
-cashoutBtn.onclick = cashOut;
-
-// Auto Bet/Cashout handlers
 betTypeSelectorBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        betTypeSelectorBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        
-        if (btn.textContent.includes("AUTO")) {
-            currentBetMode = "auto";
-            autoBetCashoutOptions.style.display = "flex";
-            betOptionsGrid.style.display = "none";
-            betInput.style.display = "none";
-            document.querySelector(".bet-input-group label").style.display = "none";
+    btn.addEventListener('click', () => {
+        betTypeSelectorBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (btn.textContent.includes('AUTO')) {
+            currentBetMode = 'auto';
+            autoBetCashoutOptions.style.display = 'flex';
+            autoBetMode = true;
+            autoCashoutMode = true;
         } else {
-            currentBetMode = "manual";
-            autoBetCashoutOptions.style.display = "none";
-            betOptionsGrid.style.display = "grid";
-            betInput.style.display = "block";
-            document.querySelector(".bet-input-group label").style.display = "block";
+            currentBetMode = 'manual';
+            autoBetCashoutOptions.style.display = 'none';
+            autoBetMode = false;
+            autoCashoutMode = false;
         }
     });
 });
 
-autoBetAmountInput.addEventListener("change", (e) => {
-    autoBetMode = e.target.value > 0;
-});
-
-autoCashoutMultiplierInput.addEventListener("change", (e) => {
-    autoCashoutMode = e.target.value > 1;
-});
-
-// Initialize game
-updateStats();
+// Initial setup
 randomPlayers();
-pi = setInterval(randomPlayers, 5000);
+updateStats();
 startCycle();
