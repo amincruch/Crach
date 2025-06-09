@@ -1,6 +1,5 @@
 // Get DOM elements
 const plane = document.getElementById("plane");
-const multF = document.getElementById("multiplierFloat");
 const countdownContainer = document.getElementById("countdown-container");
 const countdownCircle = document.getElementById("countdown-circle");
 const countdownNumber = document.getElementById("countdown-number");
@@ -66,7 +65,7 @@ function randomPlayers() {
 // Update wallet and stats display
 function updateStats() {
     walletBalanceEl.textContent = wallet.toFixed(2) + " MAD";
-    totalStakesEl.textContent = totalStakes.textContent;
+    totalStakesEl.textContent = totalStakesEl.textContent; // Keep original total stakes
     totalWinningsEl.textContent = totalWinnings.toFixed(2) + " MAD";
     totalBetsEl.textContent = totalBets.toString();
 }
@@ -81,14 +80,12 @@ function reset() {
     posY = 0;
     
     // Reset plane position
-    plane.style.transform = "translate(0, 0)";
+    plane.style.transform = "translate(0px, 0px)"; // Set initial position to 0,0
     plane.style.display = "block";
     
     // Reset multiplier display
-    multF.textContent = "1.00x";
-    multF.style.left = "50%";
-    multF.style.top = "50%";
-    multF.style.transform = "translate(-50%, -50%)";
+    countdownNumber.textContent = "1.00x"; // Display multiplier in countdown element
+    countdownContainer.style.display = 'none'; // Hide countdown container initially
     
     // Reset buttons
     startBtn.disabled = false;
@@ -96,9 +93,6 @@ function reset() {
     
     // Reset countdown
     cnt = 1;
-    countdownNumber.textContent = cnt;
-    countdownContainer.style.display = 'flex'; // Show countdown container
-    countdownCircle.style.background = 'conic-gradient(#ff8c00 0%, transparent 0%)'; // Reset circle fill
     cycleActive = false;
 }
 
@@ -107,6 +101,10 @@ function startCycle() {
     reset();
     cycleActive = true;
     
+    countdownContainer.style.display = 'flex'; // Show countdown container for countdown
+    countdownNumber.textContent = cnt;
+    countdownCircle.style.background = 'conic-gradient(#ff8c00 0%, transparent 0%)'; // Reset circle fill
+
     ci = setInterval(() => {
         countdownNumber.textContent = cnt;
         const percentage = (cnt / 5) * 100; // Calculate fill percentage
@@ -116,7 +114,7 @@ function startCycle() {
             cnt++;
         } else {
             clearInterval(ci);
-            countdownContainer.style.display = 'none'; // Hide countdown container
+            // countdownContainer.style.display = 'none'; // No need to hide, will show multiplier
             setTimeout(startFly, 500);
         }
     }, 1000);
@@ -138,9 +136,10 @@ function startFly() {
     
     gi = setInterval(() => {
         multiplier += 0.01;
-        multF.textContent = multiplier.toFixed(2) + "x";
-        
-        // Move plane and keep it within screen bounds
+        countdownNumber.textContent = multiplier.toFixed(2) + "x"; // Display multiplier
+        countdownCircle.style.background = 'conic-gradient(#ff8c00 100%, transparent 0%)'; // Keep circle full during flight
+
+        // Move plane
         posX += 3;
         posY += 2;
         
@@ -150,20 +149,13 @@ function startFly() {
         const planeHeight = plane.offsetHeight;
 
         // Calculate new position, ensuring it stays within bounds
-        let newPlaneX = Math.min(posX, gameAreaRect.width - planeWidth / 2); // Adjust for plane's center
-        let newPlaneY = Math.min(posY, gameAreaRect.height - planeHeight / 2); // Adjust for plane's center
+        let newPlaneX = Math.min(posX, gameAreaRect.width - planeWidth); // Adjust for plane's full width
+        let newPlaneY = Math.min(posY, gameAreaRect.height - planeHeight); // Adjust for plane's full height
 
         plane.style.transform = `translate(${newPlaneX}px, -${newPlaneY}px)`;
         
-        // Attach multiplier to plane
-        const planeRect = plane.getBoundingClientRect();
-        
-        multF.style.left = (planeRect.left - gameAreaRect.left + planeRect.width / 2) + "px";
-        multF.style.top = (planeRect.top - gameAreaRect.top - 20) + "px";
-        multF.style.transform = "translate(-50%, -100%)";
-        
         // Check for crash
-        if (Math.random() < 0.01 * multiplier || newPlaneX >= gameAreaRect.width - planeWidth / 2) { // Crash if reaches edge
+        if (Math.random() < 0.01 * multiplier || newPlaneX >= gameAreaRect.width - planeWidth) { // Crash if reaches edge
             crash();
         }
         
@@ -182,7 +174,7 @@ function crash() {
     clearInterval(gi);
     
     playSound(explosionSound);
-    multF.textContent = "💥 " + multiplier.toFixed(2) + "x";
+    countdownNumber.textContent = "💥 " + multiplier.toFixed(2) + "x"; // Display crash message
     plane.style.display = "none";
     
     if (placed) {
@@ -224,7 +216,7 @@ function cashOut() {
         totalWinnings += win;
         updateStats();
         
-        multF.textContent = "✅ " + multiplier.toFixed(2) + "x";
+        countdownNumber.textContent = "✅ " + multiplier.toFixed(2) + "x"; // Display cashout message
         startBtn.textContent = "PLACER UN PARI";
         startBtn.disabled = false;
         cashoutBtn.disabled = true;
@@ -272,5 +264,4 @@ betTypeSelectorBtns.forEach(btn => {
 randomPlayers();
 updateStats();
 startCycle();
-
 
