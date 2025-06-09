@@ -1,7 +1,9 @@
 // Get DOM elements
 const plane = document.getElementById("plane");
 const multF = document.getElementById("multiplierFloat");
-const countdownEl = document.getElementById("countdown");
+const countdownContainer = document.getElementById("countdown-container");
+const countdownCircle = document.getElementById("countdown-circle");
+const countdownNumber = document.getElementById("countdown-number");
 const betInput = document.getElementById("betAmount");
 const betOptionsGrid = document.querySelector(".bet-options-grid");
 const startBtn = document.getElementById("startBtn");
@@ -17,11 +19,12 @@ const autoBetCashoutOptions = document.querySelector(".auto-bet-cashout-options"
 const totalBetsEl = document.getElementById("totalBets");
 const totalStakesEl = document.getElementById("totalStakes");
 const totalWinningsEl = document.getElementById("totalWinnings");
+const walletBalanceEl = document.getElementById("walletBalance");
 const betBtns = document.querySelectorAll(".bet-options-grid button[data-val]");
 const clearBtn = document.querySelector(".clear-bet");
 
 // Game variables
-let wallet = 5000; // Increased wallet amount
+let wallet = 5000;
 let bet = 3;
 let multiplier = 1;
 let crashed = false;
@@ -30,7 +33,7 @@ let placed = false;
 let posX = 0;
 let posY = 0;
 let cycleActive = false;
-let cnt = 1; // Changed countdown start to 1
+let cnt = 1;
 let ci, gi, pi;
 let autoBetMode = false;
 let autoCashoutMode = false;
@@ -62,7 +65,8 @@ function randomPlayers() {
 
 // Update wallet and stats display
 function updateStats() {
-    totalStakesEl.textContent = wallet.toFixed(2) + " MAD";
+    walletBalanceEl.textContent = wallet.toFixed(2) + " MAD";
+    totalStakesEl.textContent = totalStakes.textContent;
     totalWinningsEl.textContent = totalWinnings.toFixed(2) + " MAD";
     totalBetsEl.textContent = totalBets.toString();
 }
@@ -91,8 +95,10 @@ function reset() {
     cashoutBtn.disabled = true;
     
     // Reset countdown
-    cnt = 1; // Reset countdown to 1
-    countdownEl.textContent = cnt; // Display only the number
+    cnt = 1;
+    countdownNumber.textContent = cnt;
+    countdownContainer.style.display = 'flex'; // Show countdown container
+    countdownCircle.style.background = 'conic-gradient(#ff8c00 0%, transparent 0%)'; // Reset circle fill
     cycleActive = false;
 }
 
@@ -102,18 +108,15 @@ function startCycle() {
     cycleActive = true;
     
     ci = setInterval(() => {
-        countdownEl.textContent = cnt; 
-        if (cnt < 5) { // Countdown from 1 to 5
+        countdownNumber.textContent = cnt;
+        const percentage = (cnt / 5) * 100; // Calculate fill percentage
+        countdownCircle.style.background = `conic-gradient(#ff8c00 ${percentage}%, transparent ${percentage}%)`;
+
+        if (cnt < 5) {
             cnt++;
         } else {
             clearInterval(ci);
-            countdownEl.textContent = "🚀";
-            
-            // Auto bet if enabled
-            if (currentBetMode === 'auto' && autoBetMode) {
-                place();
-            }
-            
+            countdownContainer.style.display = 'none'; // Hide countdown container
             setTimeout(startFly, 500);
         }
     }, 1000);
@@ -269,3 +272,5 @@ betTypeSelectorBtns.forEach(btn => {
 randomPlayers();
 updateStats();
 startCycle();
+
+
