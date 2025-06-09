@@ -4,9 +4,9 @@ body {
   color: #fff;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh; /* Changed from height to min-height */
   margin: 0;
-  overflow: hidden;
+  overflow-x: hidden; /* Changed from overflow to overflow-x */
 }
 
 .top-nav {
@@ -39,22 +39,23 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  min-height: 200px; /* Added min-height */
 }
 
 #plane {
   position: absolute;
-  width: 150px;
+  width: 120px; /* Reduced from 150px */
   height: auto;
-  bottom: 20%; /* Adjust as needed */
-  left: 10%; /* Adjust as needed */
-  transform: translate(-50%, -50% );
+  bottom: 20%;
+  left: 10%;
+  transform: translate(-50%, -50%);
   will-change: transform;
 }
 
 #multiplierFloat {
   position: absolute;
   color: #fff;
-  font-size: 3em;
+  font-size: 2.5em; /* Reduced from 3em */
   font-weight: bold;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   white-space: nowrap;
@@ -69,7 +70,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 4em;
+  font-size: 3.5em; /* Reduced from 4em */
   font-weight: bold;
   color: #dc2626; /* Red color for countdown */
 }
