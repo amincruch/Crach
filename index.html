@@ -13,12 +13,14 @@
     <button class="nav-btn active">HISTORIQUE</button>
   </div>
 
+  <div id="wallet-display" style="text-align: center; padding: 10px; background-color: #3a3a5a; font-weight: bold;">
+    المحفظة: <span id="current-wallet">1000.00 MAD</span>
+  </div>
+
   <div id="game-area">
     <img id="plane" src="plane-yellow.png" alt="Plane">
-    <div id="countdown-container">
-      <div id="countdown-circle"></div>
-      <span id="countdown-number"></span>
-    </div>
+    <div id="multiplierFloat">1.00x</div>
+    <div id="countdown"></div>
   </div>
 
   <div class="bet-section">
@@ -61,29 +63,25 @@
 
   <div class="stats-section">
     <div class="stat-item">
-      <span>رصيد المحفظة</span>
-      <span id="walletBalance">0 MAD</span>
-    </div>
-    <div class="stat-item">
-      <span>عدد الرهانات</span>
+      <span>Nombre de paris</span>
       <span id="totalBets">153</span>
     </div>
     <div class="stat-item">
-      <span>إجمالي الرهانات</span>
+      <span>Total des paris</span>
       <span id="totalStakes">1609.08 MAD</span>
     </div>
     <div class="stat-item">
-      <span>إجمالي الأرباح</span>
+      <span>Gains totaux</span>
       <span id="totalWinnings">0 MAD</span>
     </div>
   </div>
 
   <div id="players-list">
     <div class="player-header">
-      <span>اسم المستخدم</span>
-      <span>النسبة</span>
-      <span>الرهان</span>
-      <span>الربح</span>
+      <span>NOM D\"UTILISA...</span>
+      <span>COTE</span>
+      <span>PARI</span>
+      <span>GAIN</span>
     </div>
     <div id="players">
       <!-- Fake players go here -->
@@ -91,8 +89,8 @@
   </div>
 
   <div class="bottom-nav">
-    <button class="bottom-btn">تسجيل</button>
-    <button class="bottom-btn">دخول</button>
+    <button class="bottom-btn">INSCRIPTION</button>
+    <button class="bottom-btn">SE CONNECTER</button>
   </div>
 
   <audio id="flySound" src="flySound.mp3" preload="auto"></audio>
