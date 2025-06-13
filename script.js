@@ -103,7 +103,7 @@ function startCycle() {
         cnt--;
         if (cnt < 0) {
             clearInterval(ci);
-            countdownEl.textContent = "🚀";
+            countdownEl.textContent = "";
             
             // Auto bet if enabled
             if (currentBetMode === 'auto' && autoBetMode) {
